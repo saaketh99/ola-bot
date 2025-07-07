@@ -8,6 +8,7 @@ from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from pymongo import MongoClient
 from rapidfuzz import process, fuzz
+from abc import ABC, abstractmethod
 from datetime import datetime
 from datetime import datetime, timedelta
 from collections import Counter
@@ -180,12 +181,18 @@ def get_matched_customer_regex_conditions(customer_input: str, collection):
     regex_conditions = [{"start.contact.name": {"$regex": name.strip(), "$options": "i"}} for name in matched_customers]
     return matched_customers, regex_conditions
 
-class CustomerBaseAction(Action):
-    def get_customer_name(self, tracker: Tracker) -> Optional[str]:
+class CustomerBaseAction(Action, ABC):
+    @abstractmethod
+    def name(self) -> str:
+        """Each child must implement this."""
+        raise NotImplementedError("Subclasses must implement this method.")
+
+    def get_customer_name(self, tracker) -> Optional[str]:
         customer_name = get_customer_name_from_uid(tracker)
         if not customer_name:
             return None
         return customer_name
+    
 class ActionCxOrder(Action):
     def name(self) -> Text:
         return "action_cx_date"
