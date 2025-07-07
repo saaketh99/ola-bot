@@ -30,9 +30,9 @@ UID_CUSTOMER_MAP = {
 }
 
 def get_customer_name_from_uid(tracker: Tracker) -> Optional[str]:
-    uid = tracker.get_slot("uid")
-    if uid:
-        return UID_CUSTOMER_MAP.get(uid.lower())
+    uid_f = tracker.get_slot("uid")
+    if uid_f:
+        return UID_CUSTOMER_MAP.get(uid_f.lower())
     return None
 
 def fuzzy_city_match(city_name, known_cities, top_n=3, min_score=50):
@@ -208,6 +208,7 @@ class ActionAcknowledgeUid(Action):
             dispatcher.utter_message(" UID not recognized. Please try again.")
 
         return []
+
     
 class ActionCxOrder(Action):
     def name(self) -> Text:
