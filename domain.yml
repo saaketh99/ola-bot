@@ -1,0 +1,163 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - cx_date_orders
+  - route_orders
+  - orders_to_destination
+  - get_orders_by_status
+  - fetch_by_metadata
+  - track_order_by_id
+  - track_order_by_invoice
+  - orders_by_location_duration
+  - check_service_by_pincode
+  - delivery_report_by_duration
+  - fetch_order_info_by_id
+  - get_orders_by_tat
+  - get_pending_orders_past_days
+  - get_top_pincodes_by_customer
+  - pending_orders_before_last_two_days
+  - citywise_delivered_order_distribution
+  - nlu_fallback
+
+
+entities:
+ - customer_name 
+ - start_date
+ - end_date
+ - delivery_status
+ - order_id
+ - invoice_number
+ - location_code
+ - pincode
+ - tat_days
+ - n_days
+
+ - location:
+      roles:
+        - pickup
+        - drop
+        - destination
+
+
+responses:
+  utter_greet:
+  - text: "Hey! How can I help you ?"
+
+  utter_goodbye:
+  - text: "Bye"
+
+actions:
+ - action_cx_date
+ - action_route
+ - action_cx_destination
+ - action_get_orders_by_status 
+ - action_fetch_by_metadata
+ - action_get_order_status
+ - action_get_orders_by_tat
+ - action_pending_orders_past_days
+ - action_top_pincodes_by_customer
+ - action_default_fallback
+ - action_order_status_by_invoice
+ - action_check_service_by_pincode
+ - action_dynamic_order_query
+ - action_fetch_order_info_by_id
+ - action_pending_orders_before_last_two_days
+ - action_citywise_delivered_order_distribution
+
+  
+slots:
+  customer_name:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: customer_name   
+
+  start_date:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: start_date
+
+  end_date:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: end_date
+
+  pickup:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: location
+        role: pickup
+
+  drop:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: location
+        role: drop
+
+  destination:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: location
+        role: destination
+
+  delivery_status:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: delivery_status
+
+  order_id:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: order_id
+  
+  invoice_number:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: invoice_number
+
+  location_code:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: location_code
+
+  pincode:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: pincode
+
+
+  tat_days:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: tat_days
+  n_days:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: n_days
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

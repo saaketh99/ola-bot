@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chatbot</title>
+</head>
+<body>
+  <h2>Rasa Chatbot</h2>
+  <div id="chat"></div>
+  <input 
+    type="text" 
+    id="msgInput" 
+    placeholder="Type a message..." 
+    style="width: 400px; height: 40px; font-size: 16px;" 
+  />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    async function sendMessage() {
+      const msg = document.getElementById("msgInput").value;
+      const chatDiv = document.getElementById("chat");
+
+      chatDiv.innerHTML += `<p><b>You:</b> ${msg}</p>`;
+
+      const response = await fetch("http://51.20.18.59:5005/webhooks/rest/webhook", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: "user", 
+          message: msg
+        })
+      });
+
+      const data = await response.json();
+      data.forEach(entry => {
+        chatDiv.innerHTML += `<p><b>Bot:</b> ${entry.text}</p>`;
+      });
+
+      document.getElementById("msgInput").value = "";
+    }
+  </script>
+</body>
+</html>

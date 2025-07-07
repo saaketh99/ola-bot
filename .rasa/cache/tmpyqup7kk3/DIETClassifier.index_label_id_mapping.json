@@ -1,0 +1,19 @@
+{
+  "0": "check_service_by_pincode",
+  "1": "citywise_delivered_order_distribution",
+  "2": "cx_date_orders",
+  "3": "delivery_report_by_duration",
+  "4": "fetch_order_info_by_id",
+  "5": "get_orders_by_status",
+  "6": "get_orders_by_tat",
+  "7": "get_pending_orders_past_days",
+  "8": "get_top_pincodes_by_customer",
+  "9": "goodbye",
+  "10": "greet",
+  "11": "orders_by_location_duration",
+  "12": "orders_to_destination",
+  "13": "pending_orders_before_last_two_days",
+  "14": "route_orders",
+  "15": "track_order_by_id",
+  "16": "track_order_by_invoice"
+}

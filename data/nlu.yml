@@ -1,0 +1,406 @@
+version: "3.1"
+
+nlu:
+- intent: greet
+  examples: |
+    - hey
+    - hello
+    - hi
+    - hello there
+    - good morning
+    - good evening
+    - moin
+    - hey there
+    - let's go
+    - hey dude
+    - goodmorning
+    - goodevening
+    - good afternoon
+
+- intent: goodbye
+  examples: |
+    - cu
+    - good by
+    - cee you later
+    - good night
+    - bye
+    - goodbye
+    - have a nice day
+    - see you around
+    - bye bye
+    - see you later
+
+- intent: cx_date_orders
+  examples: |
+    - show me orders from [OLAELE](customer_name) between [2024-12-01](start_date) and [2024-12-31](end_date)
+    - get [Wakefit](customer_name) orders from [2024-11-01](start_date) to [2024-11-15](end_date)
+    - list all [OLA Elec](customer_name) deliveries between [2025-01-10](start_date) and [2025-01-20](end_date)
+    - give me orders booked by [OLAELE](customer_name) from [2024-10-01](start_date) to [2024-10-31](end_date)
+    - fetch [Wakefit](customer_name) shipments from [2024-09-01](start_date) through [2024-09-10](end_date)
+    - what are the orders of [OLA Elec](customer_name) from [2025-03-01](start_date) to [2025-03-05](end_date)
+    - get me all orders from [OLAELE](customer_name) between [2025-01-01](start_date) and [2025-01-15](end_date)
+    - find orders of [Wakefit](customer_name) dated from [2024-12-15](start_date) to [2024-12-20](end_date)
+    - any shipments by [OLA Elec](customer_name) between [2024-11-01](start_date) and [2024-11-10](end_date)?
+    - check [OLAELE](customer_name) orders placed from [2025-02-01](start_date) till [2025-02-15](end_date)
+
+- intent: route_orders
+  examples: |
+    - get all orders from [Hydrbd]{"entity": "location", "role": "pickup"} to [Vizag]{"entity": "location", "role": "drop"}
+    - need shipments from [Vijwada]{"entity": "location", "role": "pickup"} to [Guntur]{"entity": "location", "role": "drop"}
+    - are there any loads moved from [Tirupathi]{"entity": "location", "role": "pickup"} to [Kadapa]{"entity": "location", "role": "drop"}
+    - show me all bookings from [KKD]{"entity": "location", "role": "pickup"} to [SKLM]{"entity": "location", "role": "drop"}
+    - list packages sent from [Bhimawaram]{"entity": "location", "role": "pickup"} to [VZM]{"entity": "location", "role": "drop"}
+    - show me movements between [Chitoor]{"entity": "location", "role": "pickup"} and [Anantpur]{"entity": "location", "role": "drop"}
+    - any orders from [Medk]{"entity": "location", "role": "pickup"} to [NLR]{"entity": "location", "role": "drop"}
+    - need details of consignments between [Secbd]{"entity": "location", "role": "pickup"} and [Rajahmundry]{"entity": "location", "role": "drop"}
+    - show all routes starting in [Ongl]{"entity": "location", "role": "pickup"} and going to [Cuddapah]{"entity": "location", "role": "drop"}
+    - orders picked in [Warngl]{"entity": "location", "role": "pickup"} and dropped at [Vizianagram]{"entity": "location", "role": "drop"}
+    - list orders between [ATP]{"entity": "location", "role": "pickup"} and [CTR]{"entity": "location", "role": "drop"}
+    - check shipments that were routed from [Scbd]{"entity": "location", "role": "pickup"} to [KKM]{"entity": "location", "role": "drop"}
+    - anything shipped from [GNT]{"entity": "location", "role": "pickup"} to [VSKPTNM]{"entity": "location", "role": "drop"}
+    - packages moved from [Neloor]{"entity": "location", "role": "pickup"} to [Vizg]{"entity": "location", "role": "drop"}
+    - I need the delivery details from [Rajahmundri]{"entity": "location", "role": "pickup"} to [HYDRBD]{"entity": "location", "role": "drop"}
+    - show bookings from [Hydrbd]{"entity": "location", "role": "pickup"} to [Vizg]{"entity": "location", "role": "drop"}
+    - get all orders from [Bngluru]{"entity": "location", "role": "pickup"} to [Neloor]{"entity": "location", "role": "drop"}
+    - need loads from [Srungvrp Kota]{"entity": "location", "role": "pickup"} to [Kadppa]{"entity": "location", "role": "drop"}
+    - any consignments from [Vzg]{"entity": "location", "role": "pickup"} to [Gntur]{"entity": "location", "role": "drop"}
+    - orders moved from [Tpty]{"entity": "location", "role": "pickup"} to [Rjy]{"entity": "location", "role": "drop"}
+    - packages between [Anantpr]{"entity": "location", "role": "pickup"} and [Chittor]{"entity": "location", "role": "drop"}
+    - need list from [Scbd]{"entity": "location", "role": "pickup"} to [MachliPtam]{"entity": "location", "role": "drop"}
+    - loads from [Knr]{"entity": "location", "role": "pickup"} to [KKD]{"entity": "location", "role": "drop"}
+    - check for bookings from [Nlr]{"entity": "location", "role": "pickup"} to [Vijywd]{"entity": "location", "role": "drop"}
+    - anything sent from [Pune]{"entity": "location", "role": "pickup"} to [Elru]{"entity": "location", "role": "drop"}
+    - check if loads exist from [Cuddapa]{"entity": "location", "role": "pickup"} to [Ndyala]{"entity": "location", "role": "drop"}
+    - list shipments from [BVRM]{"entity": "location", "role": "pickup"} to [KKM]{"entity": "location", "role": "drop"}
+    - are there any packages moved from [Hanamkonda]{"entity": "location", "role": "pickup"} to [Khmm]{"entity": "location", "role": "drop"}
+    - list all bookings from [Tadeplgudem]{"entity": "location", "role": "pickup"} to [SKLM]{"entity": "location", "role": "drop"}
+    - show deliveries from [JGPL]{"entity": "location", "role": "pickup"} to [GVP]{"entity": "location", "role": "drop"}
+    - loads routed from [BLR]{"entity": "location", "role": "pickup"} to [VZM]{"entity": "location", "role": "drop"}
+    - any orders from [Kammam]{"entity": "location", "role": "pickup"} to [Tadepalli]{"entity": "location", "role": "drop"}
+    - consignments between [Rjy]{"entity": "location", "role": "pickup"} and [Hyd]{"entity": "location", "role": "drop"}
+    - show all shipments from [BPTL]{"entity": "location", "role": "pickup"} to [PTR]{"entity": "location", "role": "drop"}
+    - packages picked up in [Kurnl]{"entity": "location", "role": "pickup"} and dropped in [Nalgda]{"entity": "location", "role": "drop"}
+    
+- intent: orders_to_destination
+  examples: |
+    - Show orders sent to [Chennai]{"entity": "location", "role": "destination"} for [Wakefit]{"entity": "customer_name"}
+    - Shipments for [Amazon]{"entity": "customer_name"} delivered to [Bangalore]{"entity": "location", "role": "destination"}
+    - [Flipkart]{"entity": "customer_name"} packages sent to [Delhi]{"entity": "location", "role": "destination"}
+    - List orders under [Myntra]{"entity": "customer_name"} delivered to [Hyderabad]{"entity": "location", "role": "destination"}
+    - Anything for [Pepperfry]{"entity": "customer_name"} that went to [Pune]{"entity": "location", "role": "destination"}
+    - Check all shipments from [Ola]{"entity": "customer_name"} to [Ahmedabad]{"entity": "location", "role": "destination"}
+    - Give me [JioMart]{"entity": "customer_name"} deliveries to [Jaipur]{"entity": "location", "role": "destination"}
+    - Which orders from [BigBasket]{"entity": "customer_name"} went to [Indore]{"entity": "location", "role": "destination"}
+    - Show bookings by [Tata Cliq]{"entity": "customer_name"} for [Kolkata]{"entity": "location", "role": "destination"}
+    - Deliveries handled for [Urban Ladder]{"entity": "customer_name"} that reached [Nagpur]{"entity": "location", "role": "destination"}
+    - Show orders sent to [Chnai]{"entity": "location", "role": "destination"} for [Wakeft]{"entity": "customer_name"}
+    - Shipments for [Amzon]{"entity": "customer_name"} delivered to [Bangalor]{"entity": "location", "role": "destination"}
+    - [Flipkrt]{"entity": "customer_name"} packages sent to [Delli]{"entity": "location", "role": "destination"}
+    - List orders under [Myntr]{"entity": "customer_name"} delivered to [Hydrbd]{"entity": "location", "role": "destination"}
+    - Anything for [Pprfry]{"entity": "customer_name"} that went to [Puna]{"entity": "location", "role": "destination"}
+    - Check all shipments from [Oola]{"entity": "customer_name"} to [Ahmdbd]{"entity": "location", "role": "destination"}
+    - Give me [JMart]{"entity": "customer_name"} deliveries to [Jaypur]{"entity": "location", "role": "destination"}
+    - Which orders from [BigBsket]{"entity": "customer_name"} went to [Indr]{"entity": "location", "role": "destination"}
+    - Show bookings by [Tta Cliq]{"entity": "customer_name"} for [Kolkatta]{"entity": "location", "role": "destination"}
+    - Deliveries handled for [Urban Ladr]{"entity": "customer_name"} that reached [Nagpr]{"entity": "location", "role": "destination"}
+    - Show orders for [Wakfit]{"entity": "customer_name"} sent to [Chnnai]{"entity": "location", "role": "destination"}
+    - [Big Baskt]{"entity": "customer_name"} shipments arrived in [Indorr]{"entity": "location", "role": "destination"}
+    - Any orders from [Flipkart]{"entity": "customer_name"} to [Delhi]{"entity": "location", "role": "destination"}
+    - I need orders by [Amazn]{"entity": "customer_name"} for [Bglr]{"entity": "location", "role": "destination"}
+    - [Tata Clicq]{"entity": "customer_name"} deliveries went to [Kolkat]{"entity": "location", "role": "destination"}
+    - Anything from [URBN Ladder]{"entity": "customer_name"} shipped to [Nagpoor]{"entity": "location", "role": "destination"}
+    - [Jio Mart]{"entity": "customer_name"} orders to [Jypur]{"entity": "location", "role": "destination"}
+    - Show bookings of [Mntra]{"entity": "customer_name"} for [Hyderbad]{"entity": "location", "role": "destination"}
+    - [OlA]{"entity": "customer_name"} consignments to [Ahmedbad]{"entity": "location", "role": "destination"}
+
+- intent: get_orders_by_status
+  examples: |
+    - show me orders that are [delivered](delivery_status)
+    - list all orders [in transit](delivery_status)
+    - can you find orders that are [pending](delivery_status)
+    - display all [delivered](delivery_status) shipments
+    - give me the [pending](delivery_status) orders
+    - I want to see orders that are [in transit](delivery_status)
+    - orders which are [delivered](delivery_status)
+    - any orders still [pending](delivery_status)?
+    - do we have any [in transit](delivery_status) deliveries?
+    - show [delivered](delivery_status) packages
+    - get all orders marked as [pending](delivery_status)
+    - I need the [in transit](delivery_status) orders
+    - are there any orders that were [delivered](delivery_status)?
+    - pull up [pending](delivery_status) shipmentsb
+    - how many orders are [in transit](delivery_status)?
+    - list the [delivered](delivery_status) ones
+    - give me a report on [pending](delivery_status) orders
+    - what are the current [in transit](delivery_status) orders?
+    - check for [delivered](delivery_status) shipments
+    - retrieve all [pending](delivery_status) consignments
+
+
+- intent: track_order_by_id
+  examples: |
+    - What is the delivery status of order ID [WKFT000123](order_id)?
+    - Track my order with ID [OLAELE04199](order_id)
+    - I want the status of order [OLA998877](order_id)
+    - Where is the order with ID [WKFT000789](order_id)?
+    - Can you check the status for [ORDER12345](order_id)?
+    - What is the status of order ID [OLAELE04199](order_id)?
+    - Can you tell me the delivery status of order [1234567](order_id)?
+    - I want to know the status of order ID [WKFT0006858](order_id)
+    - Status for order [OLAELE04200](order_id)
+    - Track order [1236789](order_id)
+    - Please update me on the order [ORD90876](order_id)
+    - Is order [ABC123](order_id) delivered?
+    - Has my order [XZY999](order_id) been delivered?
+    - I placed an order with ID [QWERTY001](order_id), whats the status?
+    - What happened to order number [789654](order_id)?
+    - Is [ORD112233](order_id) on the way?
+    - Where is my order [DEL8899](order_id)?
+    - Track order number [XYZ987](order_id)
+    - Is [ABC09876](order_id) delivered yet?
+    - Check if [ORD102938](order_id) has been delivered
+
+- intent: track_order_by_invoice
+  examples: |
+    - Check the status of invoice [INV123456](invoice_number)
+    - I need tracking information for invoice [INV789101](invoice_number)
+    - Show me the delivery status for invoice [INV111213](invoice_number)
+    - What happened to invoice [INV141516](invoice_number)?
+    - Can you find invoice [INV171819](invoice_number)?
+    - Provide shipment details for invoice number [INV202122](invoice_number)
+    - Where can I find the delivery info of invoice [INV232425](invoice_number)?
+    - Give me the order status for invoice [INV262728](invoice_number)
+    - I'm checking the delivery of invoice [INV293031](invoice_number)
+    - What's the progress of invoice number [INV323334](invoice_number)?
+    - I would like to know the tracking details of invoice [INV353637](invoice_number)
+    - Tell me if invoice [INV383940](invoice_number) has been delivered
+    - Has the package for invoice [INV414243](invoice_number) been shipped?
+    - What's the POD for invoice [INV444546](invoice_number)?
+    - When was invoice [INV474849](invoice_number) delivered?
+    - Is there any update on invoice [INV505152](invoice_number)?
+    - Track invoice [INV535455](invoice_number)
+    - Lookup invoice [INV565758](invoice_number)
+    - Invoice [INV596061](invoice_number) status please
+    - Could you give me the delivery report for [INV626364](invoice_number)?
+    - Please fetch tracking data for invoice [INV656667](invoice_number)
+    - Any updates for invoice [INV686970](invoice_number)?
+    - Show invoice status [INV717273](invoice_number)
+    - I need the delivery timeline for invoice [INV747576](invoice_number)
+    - What's the shipping status of invoice [INV777879](invoice_number)?
+
+
+- intent: get_orders_by_tat
+  examples: |
+    - Show me all orders delivered in [2](tat_days) days
+    - I want orders that were delivered in [5](tat_days) days
+    - Orders with delivery TAT of [3](tat_days) days
+    - Get orders completed within [4](tat_days) days
+    - How many orders were delivered in [6](tat_days) days?
+    - List orders with a turnaround of [1](tat_days) day
+    - Give me orders that matched TAT of [7](tat_days) days
+    - Can you find orders delivered in [10](tat_days) days?
+    - Total orders with TAT equal to [3](tat_days)
+    - Retrieve orders with delivery done in [9](tat_days) days
+    - I need all orders completed in [8](tat_days) days
+    - Find orders that were closed in [2](tat_days) days
+    - Delivered orders with exact [4](tat_days)-day TAT
+    - Orders closed within [5](tat_days) days duration
+    - How many deliveries were made in [3](tat_days) days?
+    - Filter orders that were delivered in [6](tat_days) days
+    - Report on orders done in [1](tat_days) day
+    - Fetch orders delivered in exactly [2](tat_days) days
+    - Are there any orders with [7](tat_days)-day turnaround?
+
+
+
+- intent: orders_by_location_duration
+  examples: |
+    - Get all orders that were dispatched from location code [HYD003](location_code) between [2024-05-01](start_date) and [2024-05-15](end_date)
+    - Retrieve all shipments sent from [CHN-LOC9](location_code) from [April 5](start_date) to [April 9](end_date)
+    - What shipments went out from dispatch center [BLR789](location_code) between [March 10th](start_date) and [March 20th](end_date)
+    - Show me shipments originating from [MUM-LOC10](location_code) in [May](start_date)
+    - Can you list all orders routed through location code [DEL999](location_code) between [1st June](start_date) and [10th June](end_date)?
+    - List shipments from operations hub [VIZAG-LC12](location_code) between [Feb 1, 2024](start_date) and [Feb 7, 2024](end_date)
+    - Pull order records where dispatch location is [KOL456](location_code) from [April 10th](start_date) to [April 20th](end_date)
+    - Show me all bookings that left [GOA101](location_code) from [July 1](start_date) to [July 10](end_date)
+    - Give me all records of shipments processed at [TRI789](location_code) between [June 5](start_date) and [June 12](end_date)
+    - Provide the order list initiated from location [INDORE-LC](location_code) from [2024-06-01](start_date) to [2024-06-07](end_date)
+
+- intent: check_service_by_pincode
+  examples: |
+    - Do we have delivery coverage in [500001](pincode)?
+    - Is [600032](pincode) within our delivery zone?
+    - Can you check if [700045](pincode) is serviceable?
+    - Tell me if [110044](pincode) is a valid delivery location
+    - Please verify service availability for [400076](pincode)
+    - Is there delivery available in the area [500072](pincode)?
+    - Can you confirm delivery options for [302001](pincode)?
+    - Does our network cover [560100](pincode)?
+    - Is [411001](pincode) part of our delivery network?
+    - Could you check if [390011](pincode) is in the serviceable list?
+    - I want to know if [682001](pincode) is covered
+    - Do we serve the pincode [781001](pincode)?
+    - Are deliveries possible to [831001](pincode)?
+    - Is [144001](pincode) under our service area?
+    - Which delivery agent serves [500015](pincode)?
+    - Find who handles deliveries in [641602](pincode)
+    - Can you provide service info for [517501](pincode)?
+    - Whats the delivery status for area [834001](pincode)?
+    - Is [500070](pincode) supported?
+    - Tell me about delivery availability in [695014](pincode)
+    - Are shipments allowed to [380015](pincode)?
+    - Can you look up pincode [755001](pincode) for delivery service?
+    - Check whether [600100](pincode) falls under delivery coverage
+    - Is [570001](pincode) included in our service list?
+    - Let me know if delivery is possible to [676123](pincode)
+    - Do you deliver to [141001](pincode)?
+    - Is [793001](pincode) part of the coverage zone?
+
+
+- intent: delivery_report_by_duration
+  examples: |
+    - Give me a delivery report from [May 1](start_date) to [May 10](end_date)
+    - Show all deliveries between [2024-06-01](start_date) and [2024-06-15](end_date)
+    - I want the delivery summary from [March 5](start_date) until [March 20](end_date)
+    - Pull delivery data between [January 1st](start_date) and [January 31st](end_date)
+    - Can you generate a report for deliveries from [February 10](start_date) to [February 28](end_date)?
+    - List deliveries that occurred between [April 1](start_date) and [April 15](end_date)
+    - Retrieve orders delivered from [July 1, 2024](start_date) through [July 7, 2024](end_date)
+    - Show the report of all delivered orders from [June 10](start_date) to [June 17](end_date)
+    - I need delivery stats from [August 5](start_date) to [August 15](end_date)
+    - Generate delivery summary between [September 1st](start_date) and [September 30th](end_date)
+    - Get delivery details from [October 10](start_date) to [October 20](end_date)
+    - Provide shipment report from [November 1](start_date) to [November 10](end_date)
+    - Report of deliveries made from [March 15](start_date) to [March 25](end_date)
+    - Fetch delivery data from [2024-05-01](start_date) till [2024-05-15](end_date)
+    - What deliveries were done between [2024-02-01](start_date) and [2024-02-07](end_date)?
+    - Id like delivery records from [June 1st](start_date) through [June 30th](end_date)
+    - Please show me the delivery report from [April 15](start_date) to [April 22](end_date)
+    - Generate a report from [January 10](start_date) until [January 20](end_date)
+    - How many orders were delivered from [December 1](start_date) to [December 10](end_date)?
+    - I want to analyze deliveries between [May 3](start_date) and [May 8](end_date)
+    - Delivery summary from [June 18](start_date) to [June 25](end_date)
+    - Get the delivery data from [March 10, 2024](start_date) to [March 17, 2024](end_date)
+    - Please pull data of delivered orders from [2024-07-01](start_date) to [2024-07-07](end_date)
+
+
+- intent: fetch_order_info_by_id
+  examples: |
+    - What is the mode of payment for order ID [WKFT000111](order_id)?
+    - Show receiver address and invoice number for order [INV123456](invoice_number)
+    - I want to know sender city and LR number for order [OLAELE04199](order_id)
+    - Tell me the full details of order ID [OLA000765](order_id)
+    - For order [INV001234](invoice_number), show sender city and mode of payment
+    - I want receiver address, payment mode and LR for [WKFT000558](order_id)
+    - Can you provide invoice number and destination address for [OLA123000](order_id)?
+    - What is the LR number and sender name for [OLAELE00221](order_id)?
+    - Give me all the details related to order ID [WKFT001999](order_id)
+    - For order [INV900001](invoice_number), I need the payment method and dispatch city
+    - Show me the delivery address and payment type for [OLA456789](order_id)
+    - I want to check the invoice number and payment info of [OLAELE000654](order_id)
+    - What are the sender and receiver cities for order ID [WKFT008888](order_id)?
+    - Can you tell me LR number and mode of payment for order [OLA999999](order_id)?
+    - Show dispatch and delivery addresses of order [INV007001](invoice_number)
+    - Get me the LR number and invoice number of [OLAELE00987](order_id)
+    - I'd like to know everything about [WKFT010000](order_id)
+    - Please provide the payment type and LR number for [INV445566](invoice_number)
+    - Order [WKFT004321](order_id) — fetch all core details including invoice
+    - Find me sender and receiver names for [OLA567890](order_id)
+    - What is the destination and payment mode of order [WKFT000001](order_id)?
+    - I need invoice info and payment details for [INV888888](invoice_number)
+    - For [OLA999111](order_id), provide LR and dispatch city
+    - Fetch receiver address and LR of [WKFT009999](order_id)
+    - What city was [OLAELE005432](order_id) sent from and what is the payment method?
+
+
+- intent: get_pending_orders_past_days
+  examples: |
+    - What are the pending orders for [OLAELE](customer_name) in the last [7](n_days) days?
+    - Show me undelivered orders for [OLA Elec](customer_name) in past [10](n_days) days
+    - Any pending deliveries for [Wakefit](customer_name) in last [5](n_days) days?
+    - Find orders not delivered for [OLAELE](customer_name) over the previous [3](n_days) days
+    - Orders not yet delivered to [OLA Elec](customer_name) in last [4](n_days) days
+    - List pending shipments for [Wakefit](customer_name) in the last [6](n_days) days
+    - Do I have any undelivered packages in the past [2](n_days) days?
+    - Has [OLAELE](customer_name) received all packages in the last [8](n_days) days?
+
+- intent: get_top_pincodes_by_customer
+  examples: |
+    - Give me all [Wakefit](customer_name) pincodes with the highest number of orders
+    - Which pincodes have the most orders from [Wakefit](customer_name)?
+    - Show top pincodes where [Wakefit](customer_name) has maximum deliveries
+    - List [Wakefit](customer_name) highest order volume pincodes
+    - Where are most [Wakefit](customer_name) orders going?
+    - Show me the top delivery areas for [Wakefit](customer_name)
+    - What are the top-performing pincodes for [Wakefit](customer_name)?
+    - Which locations receive the most [Wakefit](customer_name) orders?
+    - Give a report on [Wakefit](customer_name) top delivery pincodes
+    - List pincodes with highest [Wakefit](customer_name) shipments
+
+- intent: pending_orders_before_last_two_days
+  examples: |
+    - Show me orders that are pending for more than 2 days
+    - Get a list of orders not yet delivered since 48 hours ago
+    - Display all shipments that are stuck for the past two days
+    - Fetch pending orders that haven't moved for over 2 days
+    - What are the unshipped orders older than two days?
+    - List all incomplete deliveries before the last two days
+    - Provide backlog data for orders not processed in the last 2 days
+    - Retrieve aging orders that have not been delivered for more than two days
+    - Which orders have been pending since before two days ago?
+    - Orders that remain unfulfilled for more than 48 hours
+    - Show delayed shipments from over two days back
+    - Give me a summary of orders delayed more than two days
+    - Can you show all pending dispatches older than 2 days?
+    - Pull undelivered order records from before two days ago
+    - Show me everything pending for more than two days
+    - List all orders that haven’t been dispatched since 2 days ago
+    - Which orders are overdue and older than 2 days?
+    - Identify long-pending shipments as of 2 days ago
+    - Provide all open orders not touched in the last two days
+    - Any incomplete orders pending since 48 hours back?
+    - Show me shipment backlogs beyond two days
+    - Get orders that were supposed to be shipped before the last 2 days
+    - List orders still pending and created before 2 days back
+    - Display pending delivery requests older than 2 days
+    - Which customer orders are still open for more than 2 days?
+
+
+- intent: citywise_delivered_order_distribution
+  examples: |
+    - Show delivered orders distributed across cities
+    - How many delivered orders are there in each city?
+    - Provide city-wise delivered order count
+    - I want to see delivered orders by city
+    - Give me a city-wise report of delivered shipments
+    - Delivered orders grouped by delivery city
+    - Report of delivered orders by destination city
+    - What are the delivered order counts per city?
+    - Show me cities with the most delivered orders
+    - How are delivered orders distributed across cities?
+    - City-wise delivery summary
+    - Distribution of delivered orders city-wise
+    - Generate report for delivered orders by city
+    - City-wise delivered shipment report
+    - Show top cities by number of deliveries
+    - Give me cities with the highest delivered shipments
+    - Show me delivered orders for [Ola](customer_name)
+    - Get delivery distribution by city for [Wakefit](customer_name)
+    - Delivered report across cities for [Ola ELE](customer_name)
+    - [Ola](customer_name) delivery report city-wise
+    - For [Wakefit](customer_name), show orders by city
+    - Can you show city-wise delivery for [Ola ELE](customer_name)?
+    - Delivery summary by city for [Ola](customer_name)
+    - Group delivered orders by city for [Wakefit](customer_name)
+    - Are there any delivered orders for [Ola ELE](customer_name)?
+    - How many orders of [Ola](customer_name) were delivered in each city?
+    - What's the city-wise delivery count for [Wakefit](customer_name)?
+    - Find city-wise delivery info of [Ola ELE](customer_name)
+    - Group deliveries by city customer is [Wakefit](customer_name)
+    - [Ola ELE](customer_name) orders summary across cities
+    - I want a breakdown of delivered orders by city for [Ola](customer_name)
+    - Delivered orders from [Wakefit](customer_name), show city-wise stats
+    - City-wise delivery performance of [Ola](customer_name)
+    - Delivered shipment summary for [Ola ELE](customer_name)
+    - Do we have city-level report for [Wakefit](customer_name)?
+    - City distribution of orders belonging to [Ola ELE](customer_name)
