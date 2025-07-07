@@ -14,82 +14,128 @@ stories:
 
 - story: cx date orders story
   steps: 
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: cx_date_orders
     - action: action_cx_date
 
-
 - story: shipment route between locations story
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: route_orders
     - action: action_route
 
 - story: customer orders to destination story
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: orders_to_destination
     - action: action_cx_destination
 
 - story: get orders by status story
   steps: 
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: get_orders_by_status
     - action: action_get_orders_by_status
-    
+
 - story: fetch orders by metadata story
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: fetch_by_metadata
     - action: action_fetch_by_metadata
 
 - story: track order by id story
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: track_order_by_id
     - action: action_get_order_status
 
 - story: Retrieve orders by specific TAT
   steps:
-  - intent: get_orders_by_tat
-  - action: action_get_orders_by_tat
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
+    - intent: get_orders_by_tat
+    - action: action_get_orders_by_tat
 
 - story: Check pending orders for a customer in the past N days
   steps:
-  - intent: get_pending_orders_past_days
-  - action: action_pending_orders_past_days
-
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
+    - intent: get_pending_orders_past_days
+    - action: action_pending_orders_past_days
 
 - story: Show top Wakefit pincodes
   steps:
-  - intent: get_top_pincodes_by_customer
-  - action: action_top_pincodes_by_customer
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: wakefit
+    - intent: get_top_pincodes_by_customer
+    - action: action_top_pincodes_by_customer
 
 - story: Orders by location and duration story
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: orders_by_location_duration
     - action: action_dynamic_order_query
 
 - story: Check service availability by pincode
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: check_service_by_pincode
     - action: action_check_service_by_pincode
 
 - story: Delivery report by date range
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: delivery_report_by_duration
     - action: action_dynamic_order_query
 
 - story: Fetch order info by order ID
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: fetch_order_info_by_id
     - action: action_fetch_order_info_by_id
 
 - story: Track order by invoice number
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: track_order_by_invoice
     - action: action_order_status_by_invoice
 
 - story: story aging orders
   steps:
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
     - intent: pending_orders_before_last_two_days
     - action: action_pending_orders_before_last_two_days
 
 - story: Delivered orders distribution by city
   steps:
-  - intent: citywise_delivered_order_distribution
-  - action: action_citywise_delivered_order_distribution
+    - intent: provide_uid
+    - slot_was_set:
+        - uid: ola
+    - intent: citywise_delivered_order_distribution
+    - action: action_citywise_delivered_order_distribution

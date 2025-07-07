@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 from collections import Counter
 
 
-CUSTOMER_NAME = "ola ele"
 client = MongoClient("mongodb+srv://ordersDbAdmin:LuiQu4KLLM0KXvQX@orders-cluster.jbais.mongodb.net/")
 db = client["orders-db"]
 collection = db["SaaS_Orders"]
@@ -22,6 +21,18 @@ sender_cities = collection.distinct("start.address.mapData.city")
 receiver_cities = collection.distinct("end.address.mapData.city")
 known_cities = list(set(sender_cities + receiver_cities))
 known_statuses = list(collection.distinct("orderStatus"))
+
+
+UID_CUSTOMER_MAP = {
+    "1234": "ola ele",
+    "4321": "wakefit"
+}
+
+def get_customer_name_from_uid(tracker: Tracker) -> Optional[str]:
+    uid = tracker.get_slot("uid")
+    if uid:
+        return UID_CUSTOMER_MAP.get(uid.lower())
+    return None
 
 def fuzzy_city_match(city_name, known_cities, top_n=3, min_score=50):
     matches = process.extract(city_name, known_cities, scorer=fuzz.token_sort_ratio, limit=top_n)
@@ -169,8 +180,12 @@ def get_matched_customer_regex_conditions(customer_input: str, collection):
     regex_conditions = [{"start.contact.name": {"$regex": name.strip(), "$options": "i"}} for name in matched_customers]
     return matched_customers, regex_conditions
 
-
-
+class CustomerBaseAction(Action):
+    def get_customer_name(self, tracker: Tracker) -> Optional[str]:
+        customer_name = get_customer_name_from_uid(tracker)
+        if not customer_name:
+            return None
+        return customer_name
 class ActionCxOrder(Action):
     def name(self) -> Text:
         return "action_cx_date"
@@ -183,7 +198,11 @@ class ActionCxOrder(Action):
         start_time = time.time()
 
     
-        customer_input = CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
+        
         message_text = tracker.latest_message.get("text", "")
         print(f"[DEBUG] Incoming message text: {message_text}")
         print(f"[DEBUG] Extracted customer_name slot: {customer_input}")
@@ -270,7 +289,12 @@ class ActionrouteOrder(Action):
             print(f"[TIME] action_route took {time.time() - start_time:.2f} seconds")
             return []
         
-        customer_input = CUSTOMER_NAME
+        
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
+
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         query = {
@@ -308,7 +332,10 @@ class ActionFordestination(Action):
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         start_time = time.time()
-        customer_input = CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         message_text = tracker.latest_message.get("text", "")
         destination = extract_destination_city(message_text)
 
@@ -357,7 +384,10 @@ class ActionGetOrdersByStatus(Action):
 
         start_time = time.time()
         message_text = tracker.latest_message.get("text", "").lower()
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -439,7 +469,10 @@ class ActionGetOrderStatus(Action):
         start_time = time.time()
 
         order_id = next(tracker.get_latest_entity_values("order_id"), None)
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -511,7 +544,11 @@ class ActionGetOrdersByTAT(Action):
         message = tracker.latest_message.get("text", "").lower()
         match = re.search(r"\b(\d+)\s*(day|days)?\b", message)
 
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
+        
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -592,7 +629,10 @@ class ActionGetOrdersByTAT(Action):
         start_time = time.time()
         message = tracker.latest_message.get("text", "").lower()
         match = re.search(r"\b(\d+)\s*(day|days)?\b", message)
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -673,7 +713,10 @@ class ActionPendingOrdersPastDays(Action):
 
         start_time = datetime.now()
         message_text = tracker.latest_message.get("text", "").lower()
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
 
 
         delivered_statuses = [
@@ -759,7 +802,10 @@ class ActionTopPincodesByCustomer(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         start_time = time.time()
-        customer_input = CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
 
         if not customer_input:
             dispatcher.utter_message("Please provide a customer name.")
@@ -833,7 +879,10 @@ class ActionDynamicOrderQuery(Action):
         user_text = tracker.latest_message.get("text", "").lower()
 
         
-        customer_input = CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -963,7 +1012,10 @@ class ActionOrderStatusByInvoice(Action):
 
         
         invoice_number = next(tracker.get_latest_entity_values("invoice_number"), None)
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -1047,7 +1099,10 @@ class ActionCheckServiceByPincode(Action):
         start_time = time.time()
 
         pincode = next(tracker.get_latest_entity_values("pincode"), None)
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -1099,7 +1154,10 @@ class ActionPendingOrdersBeforeLastTwoDays(Action):
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         start_time = datetime.now()
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -1179,7 +1237,10 @@ class ActionOrderDetailsByID(Action):
         start_time = time.time()
 
         order_id = next(tracker.get_latest_entity_values("order_id"), None)
-        customer_input=CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 
         if not regex_conditions:
@@ -1275,7 +1336,10 @@ class ActionCitywiseDeliveredOrderDistribution(Action):
         start_time = time.time()
 
         
-        customer_input = CUSTOMER_NAME
+        customer_input = get_customer_name_from_uid(tracker)
+        if not customer_input:
+            dispatcher.utter_message("Customer UID not recognized. Please provide a valid UID.")
+            return []
 
         matched_customers, regex_conditions = get_matched_customer_regex_conditions(customer_input, collection)
 

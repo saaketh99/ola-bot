@@ -1,6 +1,7 @@
 version: "3.1"
 
 intents:
+  - provide_uid
   - greet
   - goodbye
   - cx_date_orders
@@ -33,6 +34,7 @@ entities:
  - pincode
  - tat_days
  - n_days
+ - uid
 
  - location:
       roles:
@@ -157,6 +159,14 @@ slots:
     mappings:
       - type: from_entity
         entity: n_days
+
+  uid:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: uid
+
 
 session_config:
   session_expiration_time: 60

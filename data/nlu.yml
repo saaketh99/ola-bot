@@ -1,6 +1,34 @@
 version: "3.1"
 
 nlu:
+
+- intent: provide_uid
+  examples: |
+    - My UID is ola
+    - ola ele
+    - I am from wakefit
+    - I belong to delhivery
+    - company is flipkart
+    - ola logistics
+    - wakefit company
+    - UID is [ola](uid)
+    - [wakefit](uid)
+    - [flipkart](uid)
+    - [ola ele](uid)
+    - [delhivery](uid)
+    - [bluedart](uid)
+    - [dunzo](uid)
+    - [bigbasket](uid)
+    - [amazon](uid)
+    - [ekart](uid)
+    - my uid is [ola ele](uid)
+    - it's [bluedart](uid)
+    - i work for [dunzo](uid)
+    - I'm with [bigbasket](uid)
+    - it's [ekart](uid)
+    - the customer is [flipkart](uid)
+    - name is [wakefit](uid)
+    
 - intent: greet
   examples: |
     - hey
