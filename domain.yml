@@ -50,6 +50,10 @@ responses:
   utter_goodbye:
   - text: "Bye"
 
+  utter_ask_uid:
+    - text: "Please provide your customer UID to proceed."
+
+
 actions:
  - action_cx_date
  - action_route
@@ -67,6 +71,8 @@ actions:
  - action_fetch_order_info_by_id
  - action_pending_orders_before_last_two_days
  - action_citywise_delivered_order_distribution
+ - action_acknowledge_uid
+
 
   
 slots:
@@ -162,7 +168,7 @@ slots:
 
   uid:
     type: text
-    influence_conversation: false
+    influence_conversation: true
     mappings:
       - type: from_entity
         entity: uid

@@ -4,30 +4,30 @@ nlu:
 
 - intent: provide_uid
   examples: |
-    - My UID is ola
-    - ola ele
-    - I am from wakefit
-    - I belong to delhivery
-    - company is flipkart
-    - ola logistics
-    - wakefit company
-    - UID is [ola](uid)
-    - [wakefit](uid)
-    - [flipkart](uid)
-    - [ola ele](uid)
-    - [delhivery](uid)
-    - [bluedart](uid)
-    - [dunzo](uid)
-    - [bigbasket](uid)
-    - [amazon](uid)
-    - [ekart](uid)
-    - my uid is [ola ele](uid)
-    - it's [bluedart](uid)
-    - i work for [dunzo](uid)
-    - I'm with [bigbasket](uid)
-    - it's [ekart](uid)
-    - the customer is [flipkart](uid)
-    - name is [wakefit](uid)
+    - my UID is [1234](uid)
+    - UID is [9876](uid)
+    - [4321](uid) is my UID
+    - here is my UID: [5678](uid)
+    - uid [1122](uid)
+    - it's [7788](uid)
+    - the UID is [4455](uid)
+    - I'm from UID [8899](uid)
+    - my customer ID is [1001](uid)
+    - I belong to UID [2022](uid)
+    - [3033](uid) us my uid
+    - [4040](uid) is the UID
+    - from [5566](uid)
+    - I am from [9090](uid)
+    - it is [1212](uid)
+    - [1717](uid)
+    - my id: [2345](uid)
+    - customer uid: [6767](uid)
+    - [8888](uid) my uid
+    - [9999](uid) - my customer UID
+    - [0001](uid) belongs to me
+    - [2222](uid) is the code
+
+
     
 - intent: greet
   examples: |

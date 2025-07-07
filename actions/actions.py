@@ -192,6 +192,22 @@ class CustomerBaseAction(Action, ABC):
         if not customer_name:
             return None
         return customer_name
+
+class ActionAcknowledgeUid(Action):
+    def name(self) -> Text:
+        return "action_acknowledge_uid"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        
+        customer_input = get_customer_name_from_uid(tracker)
+        if customer_input:
+            dispatcher.utter_message(f" UID verified for **{customer_input.title()}**. Please continue with your query.")
+        else:
+            dispatcher.utter_message(" UID not recognized. Please try again.")
+
+        return []
     
 class ActionCxOrder(Action):
     def name(self) -> Text:
