@@ -1,33 +1,49 @@
-"use client"
+"use client";
 
-import type React from "react"
-
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Send, Bot, User, Loader2 } from "lucide-react"
-import * as XLSX from "xlsx"
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Send, Bot, User, Loader2 } from "lucide-react";
+import * as XLSX from "xlsx";
 // @ts-ignore
-import { saveAs } from "file-saver"
+import { saveAs } from "file-saver";
 
 interface ChatMessage {
-  id: string
-  text: string
-  sender: "user" | "bot"
-  timestamp: number
-  buttons?: Array<{ title: string; payload: string }>
-  image?: string
+  id: string;
+  text: string;
+  sender: "user" | "bot";
+  timestamp: number;
+  buttons?: Array<{ title: string; payload: string }>;
+  image?: string;
 }
 
 interface RasaResponse {
-  text: string
-  buttons?: Array<{ title: string; payload: string }>
-  image?: string
-  attachment?: any
+  text: string;
+  buttons?: Array<{ title: string; payload: string }>;
+  image?: string;
+  attachment?: any;
 }
+
+// LocalStorage helpers
+const LOCAL_STORAGE_KEY = "rasa_chat_history";
+
+const saveMessagesToLocalStorage = (messages: ChatMessage[]) => {
+  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(messages));
+};
+
+const loadMessagesFromLocalStorage = (): ChatMessage[] => {
+  if (typeof window === "undefined") return [];
+  const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+  try {
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+};
 
 function ClientTime({ timestamp }: { timestamp: number }) {
   const [mounted, setMounted] = useState(false);
@@ -38,61 +54,51 @@ function ClientTime({ timestamp }: { timestamp: number }) {
   );
 }
 
-// Helper to render message text with download button if link is present
 function renderMessageText(text: string) {
-  // Regex to match the download link
   const downloadRegex = /<a [^>]*href=["']([^"']+)["'][^>]*download[^>]*>([\s\S]*?)<\/a>/i;
   const match = text.match(downloadRegex);
-  if (match) {
-    const url = match[1];
-    // Instead of rendering a button, just render the link text or nothing
-    // return (
-    //   <a href={url} download target="_blank" rel="noopener noreferrer">
-    //     <button style={{ padding: "10px 20px", backgroundColor: "#4CAF50", color: "white", border: "none", borderRadius: "5px" }}>
-    //       📥 Download Excel
-    //     </button>
-    //   </a>
-    // );
-    return null; // or return <span />; if you want to show nothing
-  }
-  // Fallback: render as plain text
+  if (match) return null;
   return <span>{text}</span>;
 }
 
 export function Chat() {
-  const [mounted, setMounted] = useState(false)
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: "1",
-      text: "Hello! I'm your order management assistant. I can help you track orders, check delivery status, find orders by customer, date, location, and much more. How can I assist you today?",
-      sender: "bot",
-      timestamp: 0,
-    },
-  ])
-  const [input, setInput] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const scrollAreaRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const [mounted, setMounted] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>(() => {
+    const stored = loadMessagesFromLocalStorage();
+    return stored.length > 0
+      ? stored
+      : [
+          {
+            id: "1",
+            text: "Hello! I'm your order management assistant. I can help you track orders, check delivery status, find orders by customer, date, location, and much more. How can I assist you today?",
+            sender: "bot",
+            timestamp: 0,
+          },
+        ];
+  });
 
-  // Ensure component only renders on client side
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => setMounted(true), []);
 
   const scrollToBottom = () => {
     if (scrollAreaRef.current) {
-      const scrollContainer = scrollAreaRef.current.querySelector("[data-radix-scroll-area-viewport]")
+      const scrollContainer = scrollAreaRef.current.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
       if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
       }
     }
-  }
+  };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottom();
+  }, [messages]);
 
-  // Set initial timestamp on client to avoid hydration error
   useEffect(() => {
     if (mounted) {
       setMessages((msgs) =>
@@ -103,33 +109,37 @@ export function Chat() {
     }
   }, [mounted]);
 
+  useEffect(() => {
+    if (mounted) {
+      saveMessagesToLocalStorage(messages);
+    }
+  }, [messages, mounted]);
+
   const sendMessage = async (messageText: string) => {
-    if (!messageText.trim() || isLoading) return
+    if (!messageText.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
       text: messageText,
       sender: "user",
       timestamp: Date.now(),
-    }
+    };
 
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
-    setIsLoading(true)
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: messageText,
           sender: "user_" + Date.now(),
         }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success && data.responses) {
         const botMessages: ChatMessage[] = data.responses
@@ -141,12 +151,11 @@ export function Chat() {
             timestamp: Date.now(),
             buttons: resp.buttons,
             image: resp.image,
-          }))
+          }));
 
         if (botMessages.length > 0) {
-          setMessages((prev) => [...prev, ...botMessages])
+          setMessages((prev) => [...prev, ...botMessages]);
         } else {
-          // Fallback if no valid responses
           setMessages((prev) => [
             ...prev,
             {
@@ -155,7 +164,7 @@ export function Chat() {
               sender: "bot",
               timestamp: Date.now(),
             },
-          ])
+          ]);
         }
       } else {
         setMessages((prev) => [
@@ -166,10 +175,10 @@ export function Chat() {
             sender: "bot",
             timestamp: Date.now(),
           },
-        ])
+        ]);
       }
     } catch (error) {
-      console.error("Error sending message:", error)
+      console.error("Error sending message:", error);
       setMessages((prev) => [
         ...prev,
         {
@@ -178,23 +187,22 @@ export function Chat() {
           sender: "bot",
           timestamp: Date.now(),
         },
-      ])
+      ]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    sendMessage(input)
-  }
+    e.preventDefault();
+    sendMessage(input);
+  };
 
-  const handleButtonClick = (payload: string, title: string) => {
-    sendMessage(payload)
-  }
+  const handleButtonClick = (payload: string) => {
+    sendMessage(payload);
+  };
 
-  // Helper to extract pincode/order data from a message string
-  function extractPincodeOrders(text: string) {
+  const extractPincodeOrders = (text: string) => {
     const regex = /Pincode:\s*(\d+)\s*→\s*(\d+) orders/g;
     const result = [];
     let match;
@@ -202,13 +210,10 @@ export function Chat() {
       result.push({ Pincode: match[1], Orders: parseInt(match[2], 10) });
     }
     return result;
-  }
+  };
 
-  // Helper to extract order details from a message string
-  function extractOrderDetails(text: string) {
-    // Matches lines like: - Order ID: ... | Status: ... | To: ... | Created: ...
+  const extractOrderDetails = (text: string) => {
     const fullRegex = /- Order ID: ([^|]+) \| Status: ([^|]+) \| To: ([^|]+) \| Created: ([^\n]+)/g;
-    // Matches lines like: - Order ID: ... | Status: ...
     const simpleRegex = /- Order ID: ([^|]+) \| Status: ([^\n]+)/g;
     const result = [];
     let match;
@@ -229,13 +234,14 @@ export function Chat() {
       }
     }
     return result;
-  }
+  };
 
-  // Download handler (now supports both pincode/orders and order details)
   const handleDownloadExcel = () => {
-    // Find the latest bot message with either pincode/order data or order details
-    const lastBotMsg = [...messages].reverse().find(m => m.sender === "bot" && (/Pincode:/i.test(m.text) || /- Order ID:/i.test(m.text)));
+    const lastBotMsg = [...messages]
+      .reverse()
+      .find((m) => m.sender === "bot" && (/Pincode:/i.test(m.text) || /- Order ID:/i.test(m.text)));
     if (!lastBotMsg) return;
+
     let data: any[] = extractPincodeOrders(lastBotMsg.text);
     let sheetName = "Pincodes";
     if (!data.length) {
@@ -243,6 +249,7 @@ export function Chat() {
       sheetName = "Orders";
     }
     if (!data.length) return;
+
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
@@ -277,12 +284,9 @@ export function Chat() {
           <ScrollArea className="h-full min-h-0 p-4" ref={scrollAreaRef}>
             <div className="space-y-4 bg-white rounded-lg p-4">
               {messages
-                .filter(message => !(message.sender === "bot" && (!message.text || !message.text.trim())))
+                .filter((message) => !(message.sender === "bot" && (!message.text || !message.text.trim())))
                 .map((message, idx) => (
-                  <div
-                    key={message.id}
-                    className={`flex gap-3 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
-                  >
+                  <div key={message.id} className={`flex gap-3 ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
                     {message.sender === "bot" && (
                       <Avatar className="h-8 w-8 bg-blue-100">
                         <AvatarFallback>
@@ -290,12 +294,7 @@ export function Chat() {
                         </AvatarFallback>
                       </Avatar>
                     )}
-
-                    <div
-                      className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                        message.sender === "user" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900"
-                      }`}
-                    >
+                    <div className={`max-w-[70%] rounded-lg px-4 py-2 ${message.sender === "user" ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-900"}`}>
                       <div className="whitespace-pre-wrap break-words">{renderMessageText(message.text)}</div>
 
                       {message.buttons && message.buttons.length > 0 && (
@@ -306,7 +305,7 @@ export function Chat() {
                               variant="outline"
                               size="sm"
                               className="mr-2 mb-1 bg-transparent"
-                              onClick={() => handleButtonClick(button.payload, button.title)}
+                              onClick={() => handleButtonClick(button.payload)}
                             >
                               {button.title}
                             </Button>
@@ -316,21 +315,17 @@ export function Chat() {
 
                       {message.image && (
                         <div className="mt-2">
-                          <img
-                            src={message.image || "/placeholder.svg"}
-                            alt="Bot response"
-                            className="max-w-full h-auto rounded"
-                          />
+                          <img src={message.image || "/placeholder.svg"} alt="Bot response" className="max-w-full h-auto rounded" />
                         </div>
                       )}
 
-                      {/* Download Excel button: only show for the last bot message with pincode/order or order details data */}
                       {(() => {
-                        // Only show for the last bot message with pincode/order or order details data
                         const isLastBotMsgWithData =
                           message.sender === "bot" &&
                           (/Pincode:/i.test(message.text) || /- Order ID:/i.test(message.text)) &&
-                          messages.slice(idx + 1).every(m => !(m.sender === "bot" && (/Pincode:/i.test(m.text) || /- Order ID:/i.test(m.text))));
+                          messages.slice(idx + 1).every(
+                            (m) => !(m.sender === "bot" && (/Pincode:/i.test(m.text) || /- Order ID:/i.test(m.text)))
+                          );
                         if (!isLastBotMsgWithData) return null;
                         return (
                           <button
@@ -393,5 +388,5 @@ export function Chat() {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 }
